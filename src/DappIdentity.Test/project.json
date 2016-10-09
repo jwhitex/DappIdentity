@@ -1,4 +1,4 @@
-﻿{
+{
   "version": "1.0.0-*",
 
   "dependencies": {
@@ -10,7 +10,11 @@
     "NETStandard.Library": "1.6.0",
     "NSubstitute": "2.0.0-rc",
     "NUnit": "3.5.0",
-    "dotnet-test-nunit": "3.4.0-beta-2"
+    "dotnet-test-nunit": "3.4.0-beta-2",
+    "Serilog.Extensions.Logging": "1.2.0",
+    "Serilog.Sinks.Literate": "2.0.0",
+    "Microsoft.Extensions.Logging": "1.0.0",
+    "Autofac.Extensions.DependencyInjection": "4.0.0"
   },
 
   "testRunner": "nunit",

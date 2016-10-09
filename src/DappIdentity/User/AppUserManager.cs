@@ -17,7 +17,7 @@ namespace DappIdentity.User
                             ILookupNormalizer lookupNormalizer,
                             IdentityErrorDescriber identityErrorDescriber,
                             IServiceProvider serviceProvider,
-                            ILogger<UserManager<AppUser>> logger)
+                            ILogger<AppUserManager> logger)
             : base(store, options, passwordHasher, userValidators, passwordValidators, lookupNormalizer, identityErrorDescriber, serviceProvider, logger)
         {
         }

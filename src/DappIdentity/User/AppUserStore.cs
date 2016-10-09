@@ -31,7 +31,8 @@ namespace DappIdentity.User
                 throw new InvalidDbModelCastException();
         }
 
-        public IQueryable<AppUser> Users {
+        public IQueryable<AppUser> Users
+        {
             get
             {
                 this.ThrowIfDisposed();
@@ -63,7 +64,7 @@ namespace DappIdentity.User
             foreach (var propertyInfo in _userPropertyInfos)
             {
                 var propValue = propertyInfo.GetValue(user);
-                if (propValue == null)
+                if (propValue == null && !_configuration.NullableFields.Contains(propertyInfo.Name))
                     throw new InvalidDbModelCastException();
                 sql += $"'{propValue}', ";
             }
@@ -81,7 +82,7 @@ namespace DappIdentity.User
             foreach (var propertyInfo in _userPropertyInfos)
             {
                 var propValue = propertyInfo.GetValue(user);
-                if (propValue == null)
+                if (propValue == null && !_configuration.NullableFields.Contains(propertyInfo.Name))
                     throw new InvalidDbModelCastException();
                 sql += $"{propertyInfo.Name} = '{propValue}', ";
             }
@@ -168,10 +169,10 @@ namespace DappIdentity.User
                 throw new ArgumentNullException(nameof(user));
             if (normalizedName == null)
                 throw new ArgumentNullException(nameof(normalizedName));
-            user.UserName = normalizedName;
+            user.NormalizedUserName = normalizedName;
             return Task.FromResult(0);
         }
-    
+
         public Task SetPasswordHashAsync(AppUser user, string passwordHash, CancellationToken cancellationToken)
         {
             if ((object)user == null)
@@ -186,14 +187,14 @@ namespace DappIdentity.User
         {
             if ((object)user == null)
                 throw new ArgumentNullException(nameof(user));
-            return Task.FromResult(user.PasswordHash);           
+            return Task.FromResult(user.PasswordHash);
         }
 
         public Task<bool> HasPasswordAsync(AppUser user, CancellationToken cancellationToken)
         {
             if ((object)user == null)
                 throw new ArgumentNullException(nameof(user));
-            return Task.FromResult(user.PasswordHash != null);           
+            return Task.FromResult(user.PasswordHash != null);
         }
 
         public Task SetSecurityStampAsync(AppUser user, string stamp, CancellationToken cancellationToken)
@@ -261,12 +262,12 @@ namespace DappIdentity.User
             user.NormalizedEmail = normalizedEmail;
             return Task.FromResult(0);
         }
-        
+
         public Task<DateTimeOffset?> GetLockoutEndDateAsync(AppUser user, CancellationToken cancellationToken)
         {
             if ((object)user == null)
                 throw new ArgumentNullException(nameof(user));
-            return Task.FromResult(user.LockoutEndDateUtc.HasValue ? new DateTimeOffset?(user.LockoutEndDateUtc.Value) : null);   
+            return Task.FromResult(user.LockoutEndDateUtc.HasValue ? new DateTimeOffset?(user.LockoutEndDateUtc.Value) : null);
         }
 
         public Task SetLockoutEndDateAsync(AppUser user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)

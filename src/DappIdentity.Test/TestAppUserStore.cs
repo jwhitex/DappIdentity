@@ -17,13 +17,15 @@ namespace DappIdentity.Test
         public IDapperConnection Connection { get; set; }
 
         public Tuple<string, string, string, string> UserTableDataKey => new Tuple<string, string, string, string>("UserTable", "Id", "UserName", "Email");
+        public List<string> NullableUserTableFields => new List<string> { "LockoutEndDateUtc" };
         public List<Tuple<string, string>> UserTableJoins => new List<Tuple<string, string>> { new Tuple<string, string>("UserGroupTable", "UserGroupId") };
-        
+
         [SetUp]
         public void Setup()
         {
             var configuration = Substitute.For<IAppUserStoreConfig>();
             configuration.UserTableDataKey.Returns(UserTableDataKey);
+            configuration.NullableFields.Returns(NullableUserTableFields);
             configuration.UserTableJoins.Returns(UserTableJoins);
             Connection = Substitute.For<IDapperConnection>();
             LifetimeScope = DiFixture.Container.BeginLifetimeScope(builder =>
@@ -31,7 +33,7 @@ namespace DappIdentity.Test
                 builder.Register(c => configuration).As<IAppUserStoreConfig>().SingleInstance();
                 builder.Register(c => Connection).As<IDapperConnection>().SingleInstance();
                 builder.Register(c => new AppUserStore(c.Resolve<IAppUserStoreConfig>(), c.Resolve<IDapperConnection>())).SingleInstance();
-            });            
+            });
         }
 
         [Test]
@@ -46,7 +48,7 @@ namespace DappIdentity.Test
         public async Task TestFindByName()
         {
             var userName = "John";
-            var appUser = new AppUser { UserName = userName};
+            var appUser = new AppUser { UserName = userName };
             Connection.FirstOrDefault<AppUser>(null).ReturnsForAnyArgs(appUser);
 
             var userStore = LifetimeScope.Resolve<AppUserStore>();
@@ -60,7 +62,7 @@ namespace DappIdentity.Test
         public async Task TestFindById()
         {
             var userName = "John";
-            var appUser = new AppUser { UserName = userName};
+            var appUser = new AppUser { UserName = userName };
             Connection.FirstOrDefault<AppUser>(null).ReturnsForAnyArgs(appUser);
 
             var userStore = LifetimeScope.Resolve<AppUserStore>();
@@ -117,7 +119,7 @@ namespace DappIdentity.Test
 
             var userStore = LifetimeScope.Resolve<AppUserStore>();
             await userStore.DeleteAsync(appUser, CancellationToken.None);
-            
+
             await Connection.Received(1).Execute(Arg.Is<string>(x => x == $"DELETE UserTable WHERE Id = '{appUser.Id}'"));
         }
 

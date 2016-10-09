@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using Autofac;
+using Autofac.Extensions.DependencyInjection;
 using DappIdentity.Dapper;
 using DappIdentity.User;
 using DappIdentity.UserGroup;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Module = Autofac.Module;
 
@@ -27,9 +27,7 @@ namespace DappIdentity.Test
 
         protected override void Load(ContainerBuilder builder)
         {
-            var connection = Configuration.Root.GetConnectionString("DefaultConnection");
-            builder.Register(c => new DapperConnection(connection)).AsImplementedInterfaces();
-            builder.Register(c => new UserGroupManager(c.Resolve<IDapperConnection>())).AsImplementedInterfaces(); //Add Interface like IUserGroupManager?
+            builder.Register(c => new UserGroupManager(c.Resolve<IDapperConnection>())).AsSelf(); //Add Interface like IUserGroupManager?
             builder.Register(c => new AppUserStoreConfig()).AsImplementedInterfaces();
             builder.Register(c => new AppUserStore(c.Resolve<IAppUserStoreConfig>(), c.Resolve<IDapperConnection>())).AsImplementedInterfaces();
 
@@ -44,7 +42,8 @@ namespace DappIdentity.Test
                                                     c.Resolve<IEnumerable<IPasswordValidator<AppUser>>>(), 
                                                     new UpperInvariantLookupNormalizer(), 
                                                     new IdentityErrorDescriber(), 
-                                                    null, null)); //todo: Determin usage of lifetimescope and Logger...Use serilog.
+                                                    new AutofacServiceProvider(c),
+                                                    c.Resolve<ILoggerFactory>().CreateLogger<AppUserManager>()));
             
         }
     }

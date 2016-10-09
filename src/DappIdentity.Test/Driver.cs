@@ -22,7 +22,7 @@ namespace DappIdentity.Test
         {
             var userManager = LifetimeScope.Resolve<AppUserManager>();
 
-            var password = "password";
+            var password = "Password@1";
             var user = new AppUser
             {
                 UserName = "Test",

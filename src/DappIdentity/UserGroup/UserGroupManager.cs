@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Identity;
 
 namespace DappIdentity.UserGroup
 {
-    public class UserGroupManager   //: IPasswordProfile...
+    public class UserGroupManager
     {
         private readonly IDapperConnection _connection;
         public UserGroupManager()
