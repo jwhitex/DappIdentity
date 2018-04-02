@@ -23,11 +23,11 @@ namespace DappIdentity.Test
 
             var logger = new LoggerConfiguration()
                 .Enrich.FromLogContext()
-                .WriteTo.LiterateConsole()
+                .WriteTo.Console()
                 .CreateLogger();
             Log.Logger = logger;
             var loggerFactory = new LoggerFactory();
-            loggerFactory.AddSerilog();
+            //loggerFactory.AddSerilog();
 
             builder.Register(c => loggerFactory).As<ILoggerFactory>();
             builder.Register(c => new DapperConnection(connection)).AsImplementedInterfaces();

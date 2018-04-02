@@ -1,6 +1,7 @@
 ﻿using System.Threading.Tasks;
 using DappIdentity.UserGroup;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
 namespace DappIdentity.User

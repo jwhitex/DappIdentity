@@ -17,26 +17,26 @@ namespace DappIdentity.Dapper
             Socket = new SqlConnection(connectionString);
        }
 
-        public async Task<T> FirstOrDefault<T>(string query) where T : class
+        public async Task<T> FirstOrDefault<T>(string query, object param = null) where T : class
         {
             Socket.Open();
-            var result = await Socket.QueryFirstOrDefaultAsync<T>(query);
+            var result = await Socket.QueryFirstOrDefaultAsync<T>(query, param);
             Socket.Close();
             return result;
         }
 
-        public IEnumerable<T> ToEnumerable<T>(string query) where T : class
+        public IEnumerable<T> ToEnumerable<T>(string query, object param = null) where T : class
         {
             Socket.Open();
-            var result = Socket.Query<T>(query);
+            var result = Socket.Query<T>(query, param);
             Socket.Close();
             return result;
         }
 
-        public async Task Execute(string command)
+        public async Task Execute(string command, object param = null)
         {
             Socket.Open();
-            await Socket.ExecuteAsync(command);
+            await Socket.ExecuteAsync(command, param);
             Socket.Close();
         }
 

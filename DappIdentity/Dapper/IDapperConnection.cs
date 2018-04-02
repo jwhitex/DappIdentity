@@ -9,8 +9,8 @@ namespace DappIdentity.Dapper
         bool Disposed { get; }
         IDbConnection Socket { get; }
         void Dispose();
-        Task Execute(string command);
-        Task<T> FirstOrDefault<T>(string query) where T : class;
-        IEnumerable<T> ToEnumerable<T>(string query) where T : class;
+        Task Execute(string command, object param = null);
+        Task<T> FirstOrDefault<T>(string query, object param = null) where T : class;
+        IEnumerable<T> ToEnumerable<T>(string query, object param = null) where T : class;
     }
 }
